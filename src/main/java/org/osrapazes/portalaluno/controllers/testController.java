@@ -1,15 +1,16 @@
 package org.osrapazes.portalaluno.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/securityTest/")
 @RestController
+@RequestMapping("api/v1/demo")
 public class testController {
 
 	@GetMapping("/get")
-	String returnString() {
-		return "text";
+	public ResponseEntity<String> returnString() {
+		return ResponseEntity.ok("TextTextTextTextText");
 	}
 }

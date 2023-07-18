@@ -26,27 +26,32 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 
+
 @Entity
-@Table(name = "aluno")
+@Table(name = "admin")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Student implements UserDetails{
+public class Admin implements UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "aluno_id")
+	@Column(name = "admin_id")
 	private Long studentId;
 	@Column(name = "nome")
 	private String name;
 
-	private String cpf;
-
-	private String rg;
-
 	private String email;
 
 	private String password;
+
+	// @ManyToMany(fetch=FetchType.EAGER)
+	// @JoinTable(
+	// 	name="student_role_junction",
+	// 	joinColumns = {@JoinColumn(name="aluno_id")},
+	// 	inverseJoinColumns = {@JoinColumn(name="cargo_id")}
+	// )
+	// private Set<Role> role;
 	
 	@Enumerated(EnumType.STRING)
 	private RoleEnum role;
