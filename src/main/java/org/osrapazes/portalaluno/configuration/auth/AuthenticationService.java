@@ -17,8 +17,7 @@ import org.osrapazes.portalaluno.models.RoleEnum;
 import org.osrapazes.portalaluno.models.Student;
 
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
-
+//Service responsavel por processar requests dos endpoints do AuthenticationController
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -30,7 +29,10 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 
 
-	public AuthenticationResponse register(RegisterRequestAdmin request) {
+	public AuthenticationResponse register(RegisterRequestAdmin request) throws EntityExistsException {
+		if(isEmailInUse(request.getEmail())) {
+			throw new EntityExistsException("Email already registered");
+		}
 		Admin user = Admin.builder()
 			.name(request.getName())
 			.email(request.getEmail())
@@ -44,7 +46,10 @@ public class AuthenticationService {
 			.token(jwtToken)
 			.build();
 	}
-	public AuthenticationResponse register(RegisterRequestStudent request) {
+	public AuthenticationResponse register(RegisterRequestStudent request) throws EntityExistsException {
+		if(isEmailInUse(request.getEmail())) {
+			throw new EntityExistsException("Email already registered");
+		}
 		Student user = Student.builder()
 			.name(request.getName())
 			.email(request.getEmail())
@@ -63,13 +68,22 @@ public class AuthenticationService {
 
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-		var user = studentRepository.findByEmail(request.getEmail()).orElseThrow();
+
+		Optional<Student> student = studentRepository.findByEmail(request.getEmail());
+		Optional<Admin> admin = adminRepository.findByEmail(request.getEmail());
+
+		var user = admin.isPresent() ? admin.get() : student.get();
+
 		var jwtToken = jwtService.generateToken(user);
 		return AuthenticationResponse.builder()
 			.token(jwtToken)
 			.build();	
+	}
 
-
+	public boolean isEmailInUse(String email) {
+		Optional<Student> student = studentRepository.findByEmail(email);
+		Optional<Admin> admin = adminRepository.findByEmail(email);
+		return (admin.isPresent() || student.isPresent());
 	}
 
 }

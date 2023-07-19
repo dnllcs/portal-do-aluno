@@ -1,6 +1,5 @@
 package org.osrapazes.portalaluno.configuration.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +17,8 @@ public class AuthenticationController {
 	private final AuthenticationService authenticationService;
 
 
-
+	//controle de gerenciamento de login/registro
+	//endpoints nao relacionados diretamente com autenticacao nao devem ser adicionados
 	@PostMapping("/registerStudent")
 	public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequestStudent request) {
 		return ResponseEntity.ok(authenticationService.register(request));

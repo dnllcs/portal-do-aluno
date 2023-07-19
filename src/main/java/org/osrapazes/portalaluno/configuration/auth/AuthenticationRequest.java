@@ -1,10 +1,8 @@
 package org.osrapazes.portalaluno.configuration.auth;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Builder;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
+//Formato da resposta enviada pra o controller AuthenticationController
 @Data
 @Builder
 @AllArgsConstructor

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +15,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-
+//Service responsavel por gerar e validar tokens JWT
 @Service
 public class JwtService {
-	//mock encryption key
-	private final static String KEY = "32fbc407ce98d8c1eef2ac92de43499014580b5323c16af45d4adccbf78de875";
+	
+	@Value("${application.security.jwtkey}")
+	private String key;
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -68,7 +70,7 @@ public class JwtService {
 	}
 
 	private Key getSignInKey() {
-		byte[] keyBytes = Decoders.BASE64.decode(KEY);
+		byte[] keyBytes = Decoders.BASE64.decode(key);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }
