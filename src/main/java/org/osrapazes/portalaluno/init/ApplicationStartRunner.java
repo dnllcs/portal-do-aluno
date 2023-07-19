@@ -21,9 +21,10 @@ public class ApplicationStartRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String ...args) throws Exception {
-		authenticationService.register(new RegisterRequestStudent("alunoTeste", "alunoTeste@gmail.com", "123", "cpf123", "rg123", true));
-		authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123", true));
-
+		if(!authenticationService.isEmailInUse("alunoTeste@gmail") && !authenticationService.isEmailInUse("adminTeste@gmail.com")) {
+			authenticationService.register(new RegisterRequestStudent("alunoTeste", "alunoTeste@gmail.com", "123", "cpf123", "rg123", true));
+			authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123", true));
+		}
 	}
 	
 }
