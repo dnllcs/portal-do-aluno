@@ -10,23 +10,21 @@ import jakarta.persistence.Id;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Builder;
 
-@Entity
+@Entity(name = "aluno")
 @Table(name = "aluno")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "studentId")
 public class Student implements UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +45,14 @@ public class Student implements UserDetails{
 	private RoleEnum role;
 
 	private boolean status;
+
+	public Student(StudentRequestDTO data){
+		this.name = data.name();
+		this.cpf = data.cpf();
+		this.rg = data.rg();
+		this.email = data.email();
+		this.password = data.password();
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
