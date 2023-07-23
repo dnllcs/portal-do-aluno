@@ -1,5 +1,6 @@
 package org.osrapazes.portalaluno.init;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,8 +40,6 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			authenticationService.register(new RegisterRequestStudent("alunoTeste", "alunoTeste@gmail.com", "123", "cpf123", "rg123", true));
 			authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123", true));
 		}
-
-
 		Student std1 = Student.builder()
 			.name("Student1")
 			.email("Student1@email")
@@ -49,6 +48,7 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			.rg("rg")
 			.role(RoleEnum.STUDENT)
 			.status(true)
+			.birthDate(LocalDate.of(2000, 5, 11))
 			.subjects((Set) new HashSet<>())
 			.build();
 		Student std2 = Student.builder()
@@ -59,6 +59,7 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			.rg("rg")
 			.role(RoleEnum.STUDENT)
 			.status(true)
+			.birthDate(LocalDate.of(2000, 1, 17))
 			.subjects((Set) new HashSet<>())
 			.build();
 		Student std3 = Student.builder()
@@ -69,9 +70,9 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			.rg("rg")
 			.role(RoleEnum.STUDENT)
 			.status(true)
+			.birthDate(LocalDate.of(2000, 7, 15))
 			.subjects((Set) new HashSet<>())
 			.build();
-
 
 		Subject sub1 = Subject.builder()
 			.name("Subject1")
@@ -95,9 +96,7 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		std2.addSubject(sub1);
 		std2.addSubject(sub3);
 		std3.addSubject(sub2);
-		// std.addSubject(new Subject(null, "TestDCU-162", "TestDCU-162", (Set) new HashSet<Student>()));
-		// std.addSubject(new Subject(null, "TestDCU-163", "TestDCU-163", (Set) new HashSet<Student>()));
-
+		
 		subjectRepository.save(sub1);
 		subjectRepository.save(sub2);
 		subjectRepository.save(sub3);
@@ -105,14 +104,6 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		studentRepository.save(std1);
 		studentRepository.save(std2);
 		studentRepository.save(std3);
-
-
-
-		System.out.println(subjectRepository.findByName("Subject1"));
-		System.out.println("***************" + subjectRepository.findByNameAndProfessor("Subject3", "professor3") + "***************");
-
-
-
 	}
 	
 }

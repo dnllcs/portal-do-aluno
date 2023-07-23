@@ -7,6 +7,7 @@ import org.osrapazes.portalaluno.models.Subject;
 import org.osrapazes.portalaluno.models.SubjectRequest;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.SubjectRepository;
+import org.osrapazes.portalaluno.services.SubjectService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,44 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/demo")
 public class SubjectController {
 
-	private final StudentRepository studentRepository;
-	private final SubjectRepository subjectRepository;
+	private final SubjectService subjectService;
 
-	public SubjectController(StudentRepository studentRepository, SubjectRepository subjectRepository) {
-		this.studentRepository = studentRepository;
-		this.subjectRepository = subjectRepository;
+	public SubjectController(SubjectService subjectService) {
+		this.subjectService = subjectService;
 	}
-
 	@GetMapping("/get")
 	public ResponseEntity<String> returnString() {
 		return ResponseEntity.ok("TextTextTextTextText");
 	}
-
-
 	@GetMapping("/getStudentSubjects/{id}")
 	public List<Subject> getSubjects(@PathVariable("id") int id) {
-		Student std = studentRepository.getById((long) id);
-		System.out.println(std + "      " + id);
-		return std.getSubjects();
+		return subjectService.getSubjects(Long.valueOf(id));
 	}
-
 	@PostMapping("/addSubjectToStudent/{id}")
-	public ResponseEntity<String> addSubjectToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest request) {
-		System.out.println("++++++++++++++++" + request.toString() + "++++++++++++++++");
-		Student student = studentRepository.findById(Long.valueOf(id)).orElseThrow();
-		student.addSubject(subjectRepository.findByNameAndProfessor(request.name(), request.professor()).get());
-		studentRepository.save(student);
-		return ResponseEntity.ok("ok");
+	public ResponseEntity<?> addSubjectToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest request) {
+		return subjectService.addSubjectToStudent(Long.valueOf(id), request);
 	}
 	@PostMapping("/removeSubjectToStudent/{id}")
-		public ResponseEntity<String> removeSubjectToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest request) {
-			System.out.println("++++++++++++++++" + request.toString() + "++++++++++++++++");
-			Student student = studentRepository.findById(Long.valueOf(id)).orElseThrow();
-			student.removeSubject(subjectRepository.findByNameAndProfessor(request.name(), request.professor()).get());
-			studentRepository.save(student);
-			return ResponseEntity.ok("ok");
-		}
-
-
+	public ResponseEntity<?> removeSubjectToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest request) {
+		return subjectService.removeSubjectToStudent(Long.valueOf(id), request);				
+	}
 
 }

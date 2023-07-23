@@ -36,9 +36,12 @@ public class Subject {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "disciplina_id")
 	private Long subjectId;
+
 	private String professor;
+
 	@Column(name= "nome")
 	private String name;
+
 	@ManyToMany(mappedBy = "subjects")
 	@JsonIgnoreProperties("subjects")
 	private Set<Student> students = new HashSet<>();
@@ -47,7 +50,7 @@ public class Subject {
 		this.professor = professor;
 		this.name = name;
 	}
-
+	
 	public Set<Student> getStudents() {
 		return this.students;
 	}
