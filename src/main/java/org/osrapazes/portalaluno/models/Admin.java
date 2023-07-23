@@ -32,7 +32,7 @@ public class Admin implements UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "admin_id")
-	private Long studentId;
+	private Long adminId;
 	@Column(name = "nome")
 	private String name;
 
