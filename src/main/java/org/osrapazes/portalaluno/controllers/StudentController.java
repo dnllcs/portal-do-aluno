@@ -21,10 +21,9 @@ public class StudentController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    public void saveFood(@RequestBody StudentRequestDTO data){
+    public void saveStudent(@RequestBody StudentRequestDTO data){
         Student studentData = new Student(data);
         repository.save(studentData);
-        return;
     }
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
@@ -33,15 +32,15 @@ public class StudentController {
         List<StudentResponseDTO> studentList = repository.findAll().stream().map(StudentResponseDTO::new).toList();
         return studentList;
     }
-    @GetMapping("/print/{cpf}")
-    public ResponseEntity<String> printFoodById(@PathVariable Long id) {
+    @GetMapping("/print/{id}")
+    public ResponseEntity<String> printStudentById(@PathVariable Long id) {
         Student student = repository.findById(id).orElse(null);
 
         if (student == null) {
             return ResponseEntity.notFound().build();
         }
 
-        String filePath = "src/test/arquivo"+ student.getStudentId() +".pdf";
+        String filePath = "src/test/Comprovante de Matricula - "+ student.getStudentId() +".pdf";
         pdfGeneratorService.generateEnrollmentStatement(student, filePath);
         return ResponseEntity.ok("PDF gerado com sucesso!");
     }
