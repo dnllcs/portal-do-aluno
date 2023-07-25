@@ -35,9 +35,8 @@ import jakarta.persistence.Table;
 @Data
 @Builder
 @NoArgsConstructor
-@EqualsAndHashCode(of = "studentId")
 @AllArgsConstructor 
-@EqualsAndHashCode(exclude = { "subjects"})
+@EqualsAndHashCode(of = "studentId", exclude = { "subjects"})
 @ToString(exclude = { "subjects"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Student implements UserDetails{
@@ -81,6 +80,7 @@ public class Student implements UserDetails{
 
 	public List<Subject> getSubjects() {
 		return List.copyOf(this.subjects);
+	}
 	public Student(StudentRequestDTO data){
 		this.name = data.name();
 		this.cpf = data.cpf();
