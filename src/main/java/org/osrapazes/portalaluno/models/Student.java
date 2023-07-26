@@ -40,7 +40,7 @@ import jakarta.persistence.Table;
 @EqualsAndHashCode(of = "studentId", exclude = { "subjects"})
 @ToString(exclude = { "subjects"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Student implements UserDetails{
+public class Student{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "aluno_id")
@@ -57,11 +57,6 @@ public class Student implements UserDetails{
 	private String rg;
 
 	private String email;
-
-	private String password;
-	
-	@Enumerated(EnumType.STRING)
-	private RoleEnum role;
 
 	private boolean status;
 
@@ -96,41 +91,5 @@ public class Student implements UserDetails{
 		this.cpf = data.cpf();
 		this.rg = data.rg();
 		this.email = data.email();
-		this.password = data.password();
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(role.name()));
-	}
-
-	@Override
-	public String getPassword() {
-		return this.password;	
-	}
-
-	@Override
-	public String getUsername() {
-		return this.email;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;	
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return this.status;
 	}
 }

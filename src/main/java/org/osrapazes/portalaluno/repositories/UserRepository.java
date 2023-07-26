@@ -14,11 +14,9 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	@EntityGraph(attributePaths = { "admin", "student" })
-	@Query("FROM User u WHERE u.email = email")
+	@Query("SELECT u FROM User u WHERE u.email = :email")
 	Optional<User> findByEmailAll(@Param("email") String email);
 
 	Optional<User> findByEmail(String email);
-	// @Query("a.nome FROM aluno, usuario WHERE usuario.")
-	// Optional<?> findUser(String email);
 
 }

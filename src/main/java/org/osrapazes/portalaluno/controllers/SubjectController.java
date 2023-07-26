@@ -36,6 +36,7 @@ public class SubjectController {
 	}
 	@PostMapping("/addSubjectToStudent/{id}")
 	public ResponseEntity<?> addSubjectToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest request) {
+		System.out.println("addSubjectToStudent");
 		return subjectService.addSubjectToStudent(Long.valueOf(id), request);
 	}
 	@PostMapping("/removeSubjectToStudent/{id}")

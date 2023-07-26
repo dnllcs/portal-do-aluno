@@ -40,17 +40,13 @@ public class ApplicationStartRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String ...args) throws Exception {
-		if(!authenticationService.isEmailInUse("alunoTeste@gmail") && !authenticationService.isEmailInUse("adminTeste@gmail.com")) {
-			authenticationService.register(new RegisterRequestStudent("alunoTeste", "alunoTeste@gmail.com", "123", "cpf123", "rg123", true));
-			authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123", true));
-		}
+		authenticationService.register(new RegisterRequestStudent("alunoTeste", "alunoTeste@gmail.com", "123", "cpf123", "rg123", true));
+		authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123", true));
 		Student std1 = Student.builder()
 			.name("Student1")
 			.email("Student1@email")
-			.password(passwordEncoder.encode("password"))
 			.cpf("cpf")
 			.rg("rg")
-			.role(RoleEnum.STUDENT)
 			.status(true)
 			.birthDate(LocalDate.of(2000, 5, 11))
 			.subjects((Set) new HashSet<>())
@@ -58,10 +54,8 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		Student std2 = Student.builder()
 			.name("Student2")
 			.email("Student2@email")
-			.password(passwordEncoder.encode("password"))
 			.cpf("cpf")
 			.rg("rg")
-			.role(RoleEnum.STUDENT)
 			.status(true)
 			.birthDate(LocalDate.of(2000, 1, 17))
 			.subjects((Set) new HashSet<>())
@@ -69,10 +63,8 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		Student std3 = Student.builder()
 			.name("Student3")
 			.email("Student3@email")
-			.password(passwordEncoder.encode("password"))
 			.cpf("cpf")
 			.rg("rg")
-			.role(RoleEnum.STUDENT)
 			.status(true)
 			.birthDate(LocalDate.of(2000, 7, 15))
 			.subjects((Set) new HashSet<>())
@@ -118,10 +110,6 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		studentRepository.save(std2);
 		studentRepository.save(std3);
 		userRepository.save(user3);
-
-
-		System.out.println("************************" + userRepository.findByEmailAll("Student3@email").get() + "************************");
-		System.out.println(userRepository.findByEmailAll("Student3@email").get().owner().get());
 
 	}
 	

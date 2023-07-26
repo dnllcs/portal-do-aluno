@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.osrapazes.portalaluno.models.Admin;
 import org.osrapazes.portalaluno.repositories.AdminRepository;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
+import org.osrapazes.portalaluno.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,15 +28,14 @@ public class ApplicationConfig {
 
 	private final StudentRepository studentRepository;
 	private final AdminRepository adminRepository;
+	private final UserRepository userRepository;
 
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new UserDetailsService() {
 			@Override
 			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				Optional<Student> student = studentRepository.findByEmail(username);
-				Optional<Admin> admin = adminRepository.findByEmail(username);
-				return admin.isPresent() ? admin.get() : student.get();
+				return userRepository.findByEmailAll(username).get();
 				
 			}
 			
