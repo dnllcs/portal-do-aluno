@@ -10,8 +10,10 @@ import org.osrapazes.portalaluno.configuration.auth.RegisterRequestStudent;
 import org.osrapazes.portalaluno.models.RoleEnum;
 import org.osrapazes.portalaluno.models.Student;
 import org.osrapazes.portalaluno.models.Subject;
+import org.osrapazes.portalaluno.models.User;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.SubjectRepository;
+import org.osrapazes.portalaluno.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,12 +28,14 @@ public class ApplicationStartRunner implements CommandLineRunner {
 	private final SubjectRepository subjectRepository;
 	private final StudentRepository studentRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final UserRepository userRepository;
 
-	public ApplicationStartRunner(AuthenticationService authenticationService, SubjectRepository subjectRepository, StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
+	public ApplicationStartRunner(AuthenticationService authenticationService, SubjectRepository subjectRepository, StudentRepository studentRepository, PasswordEncoder passwordEncoder, UserRepository userRepository) {
 		this.authenticationService = authenticationService;
 		this.subjectRepository = subjectRepository;
 		this.studentRepository = studentRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
 	}
 
 	@Override
@@ -74,6 +78,15 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			.subjects((Set) new HashSet<>())
 			.build();
 
+		User user3 = User.builder()
+			.email("Student3@email")
+			.password(passwordEncoder.encode("password"))
+			.role(RoleEnum.STUDENT)
+			.build();
+
+		std3.addUser(user3);
+
+
 		Subject sub1 = Subject.builder()
 			.name("Subject1")
 			.professor("professor1")
@@ -104,6 +117,12 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		studentRepository.save(std1);
 		studentRepository.save(std2);
 		studentRepository.save(std3);
+		userRepository.save(user3);
+
+
+		System.out.println("************************" + userRepository.findByEmailAll("Student3@email").get() + "************************");
+		System.out.println(userRepository.findByEmailAll("Student3@email").get().owner().get());
+
 	}
 	
 }

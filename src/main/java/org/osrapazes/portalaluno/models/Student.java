@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,7 +31,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
-@Entity(name = "aluno")
+@Entity()
 @Table(name = "aluno")
 @Data
 @Builder
@@ -46,6 +47,10 @@ public class Student implements UserDetails{
 	private Long studentId;
 	@Column(name = "nome")
 	private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "usuario_id")
+	private User user;
 
 	private String cpf;
 
@@ -68,6 +73,11 @@ public class Student implements UserDetails{
         inverseJoinColumns = @JoinColumn(name = "disciplina_id"))
 	@JsonIgnoreProperties("students")
 	private Set<Subject> subjects = new HashSet<>();
+
+	public void addUser(User user) {
+		this.user = user;
+		user.setStudent(this);
+	}
 
 	public void addSubject(Subject subject) {
 		this.subjects.add(subject);

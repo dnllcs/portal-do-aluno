@@ -64,7 +64,7 @@ public class AuthenticationService {
 		return AuthenticationResponse.builder()
 			.token(jwtToken)
 			.build();
-	}
+	}	
 
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -73,6 +73,7 @@ public class AuthenticationService {
 		Optional<Admin> admin = adminRepository.findByEmail(request.getEmail());
 
 		var user = admin.isPresent() ? admin.get() : student.get();
+
 
 		var jwtToken = jwtService.generateToken(user);
 		return AuthenticationResponse.builder()
