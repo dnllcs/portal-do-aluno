@@ -11,6 +11,5 @@ public class RegisterRequestAdmin {
 	private String name;
 	private String email;
 	private String password;
-	private boolean status;
 
 }

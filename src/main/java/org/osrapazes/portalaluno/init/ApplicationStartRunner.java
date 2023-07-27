@@ -40,8 +40,8 @@ public class ApplicationStartRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String ...args) throws Exception {
-		authenticationService.register(new RegisterRequestStudent("alunoTeste", "alunoTeste@gmail.com", "123", "cpf123", "rg123", true));
-		authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123", true));
+		authenticationService.register(new RegisterRequestStudent("alunoTeste", "alunoTeste@gmail.com", "123", "cpf123", "rg123", LocalDate.of(1995, 10, 10)));
+		authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123"));
 		Student std1 = Student.builder()
 			.name("Student1")
 			.email("Student1@email")
@@ -76,9 +76,6 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			.role(RoleEnum.STUDENT)
 			.build();
 
-		std3.addUser(user3);
-
-
 		Subject sub1 = Subject.builder()
 			.name("Subject1")
 			.professor("professor1")
@@ -95,6 +92,9 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			.students((Set) new HashSet<>())
 			.build();
 
+
+		std3.addUser(user3);
+
 		std1.addSubject(sub1);
 		std1.addSubject(sub2);
 		std1.addSubject(sub3);
@@ -110,6 +110,9 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		studentRepository.save(std2);
 		studentRepository.save(std3);
 		userRepository.save(user3);
+
+		
+		
 
 	}
 	

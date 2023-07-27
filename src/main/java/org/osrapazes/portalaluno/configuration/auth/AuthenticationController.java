@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -19,11 +19,11 @@ public class AuthenticationController {
 
 	//controle de gerenciamento de login/registro
 	//endpoints nao relacionados diretamente com autenticacao nao devem ser adicionados
-	@PostMapping("/registerStudent")
+	@PostMapping("/register/student")
 	public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequestStudent request) {
 		return ResponseEntity.ok(authenticationService.register(request));
 	}
-	@PostMapping("/registerAdmin")
+	@PostMapping("/register/admin")
 	public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequestAdmin request) {
 		return ResponseEntity.ok(authenticationService.register(request));
 	}

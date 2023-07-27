@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("student")
+@RequestMapping("v1/students")
 public class StudentController {
     @Autowired
     private StudentRepository repository;
@@ -20,19 +20,13 @@ public class StudentController {
     private PdfGeneratorService pdfGeneratorService;
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping
-    public void saveStudent(@RequestBody StudentRequestDTO data){
-        Student studentData = new Student(data);
-        repository.save(studentData);
-    }
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public List<StudentResponseDTO> getAll(){
 
         List<StudentResponseDTO> studentList = repository.findAll().stream().map(StudentResponseDTO::new).toList();
         return studentList;
     }
-    @GetMapping("/print/{id}")
+    @GetMapping("/enrollment/{id}")
     public ResponseEntity<String> printStudentById(@PathVariable Long id) {
         Student student = repository.findById(id).orElse(null);
 

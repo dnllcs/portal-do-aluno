@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 //Controle apenas utilizado para testes
 @RestController
-@RequestMapping("api/v1/demo")
+@RequestMapping("v1/subjects")
 public class SubjectController {
 
 	private final SubjectService subjectService;
@@ -26,20 +26,23 @@ public class SubjectController {
 	public SubjectController(SubjectService subjectService) {
 		this.subjectService = subjectService;
 	}
-	@GetMapping("/get")
-	public ResponseEntity<String> returnString() {
-		return ResponseEntity.ok("TextTextTextTextText");
+	@GetMapping("")
+	public List<Subject> getAllSubjects() {
+		return subjectService.getAllSubjects();
 	}
-	@GetMapping("/getStudentSubjects/{id}")
+
+	@GetMapping("/student/{id}")
 	public List<Subject> getSubjects(@PathVariable("id") int id) {
 		return subjectService.getSubjects(Long.valueOf(id));
 	}
-	@PostMapping("/addSubjectToStudent/{id}")
+
+	@PostMapping("/student/{id}/add")
 	public ResponseEntity<?> addSubjectToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest request) {
 		System.out.println("addSubjectToStudent");
 		return subjectService.addSubjectToStudent(Long.valueOf(id), request);
 	}
-	@PostMapping("/removeSubjectToStudent/{id}")
+
+	@PostMapping("/student/{id}/remove")
 	public ResponseEntity<?> removeSubjectToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest request) {
 		return subjectService.removeSubjectToStudent(Long.valueOf(id), request);				
 	}

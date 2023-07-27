@@ -25,6 +25,10 @@ public class SubjectService {
 		this.subjectRepository = subjectRepository;
 	}
 
+	public List<Subject> getAllSubjects() {
+		return subjectRepository.findAll();
+	}
+
 	public List<Subject> getSubjects(Long id) {
 		Student std = studentRepository.getById(id);
 		return std.getSubjects();
@@ -40,7 +44,7 @@ public class SubjectService {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject name: " + request.name() + " professor: " + request.professor() + " not found");	
 		}
 		Student student = studentOptional.get();
-		student.removeSubject(subjectOptional.get());
+		student.addSubject(subjectOptional.get());
 		studentRepository.save(student);
 		return ResponseEntity.accepted().body(student);
 	}
