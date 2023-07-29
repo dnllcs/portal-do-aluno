@@ -2,7 +2,7 @@ package org.osrapazes.portalaluno.repositories;
 
 import java.util.Optional;
 
-import org.osrapazes.portalaluno.models.Student;
+import org.osrapazes.portalaluno.models.Enrollment;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,10 +10,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
+	
+	@Query("FROM Enrollment e WHERE e.enrollmentCode = :code")
+	@EntityGraph(attributePaths = {"student"})
+	Optional<Enrollment> findByEnrollmentCode(@Param("code") String code);
 
-	Optional<Student> findByEmail(String email);
-	@EntityGraph(attributePaths = {"subjects"})
-	@Query("SELECT s FROM Student s WHERE s.id = :id")
-	Optional<Student> findByIdEagerly(@Param("id") Long id);
+
 }

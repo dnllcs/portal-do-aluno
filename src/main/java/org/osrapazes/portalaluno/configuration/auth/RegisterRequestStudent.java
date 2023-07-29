@@ -17,4 +17,5 @@ public class RegisterRequestStudent {
 	private String cpf;
 	private String rg;
 	private LocalDate birthDate;
+	private String enrollmentCode;
 }

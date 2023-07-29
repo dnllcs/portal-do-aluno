@@ -1,20 +1,11 @@
 package org.osrapazes.portalaluno.models;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,6 +23,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Admin{
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "admin_id")
@@ -43,9 +35,7 @@ public class Admin{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "usuario_id")
 	private User user;
-	
 	private String email;
-
 	private boolean status;
 
 	public void addUser(User user) {

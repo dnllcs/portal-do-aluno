@@ -1,9 +1,8 @@
 package org.osrapazes.portalaluno.configuration.auth;
 
-import java.util.Optional;
-
 import org.osrapazes.portalaluno.configuration.JwtService;
 import org.osrapazes.portalaluno.repositories.AdminRepository;
+import org.osrapazes.portalaluno.repositories.EnrollmentRepository;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import org.osrapazes.portalaluno.models.Admin;
+import org.osrapazes.portalaluno.models.Enrollment;
 import org.osrapazes.portalaluno.models.RoleEnum;
 import org.osrapazes.portalaluno.models.Student;
 import org.osrapazes.portalaluno.models.User;
@@ -27,6 +27,7 @@ public class AuthenticationService {
 	private final StudentRepository studentRepository;
 	private final AdminRepository adminRepository;
 	private final UserRepository userRepository;
+	private final EnrollmentRepository enrollmentRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
@@ -58,8 +59,12 @@ public class AuthenticationService {
 			.build();
 	}
 	public AuthenticationResponse register(RegisterRequestStudent request) throws EntityExistsException {
+		Enrollment enrollment = enrollmentRepository.findByEnrollmentCode(request.getEnrollmentCode()).orElseThrow();
 		if(userRepository.findByEmailAll(request.getEmail()).isPresent()) {
 			throw new EntityExistsException("Email already registered");
+		}
+		else if(enrollment.getStudent() != null) {
+			throw new EntityExistsException("Enrollment code already in use");
 		}
 		Student student = Student.builder()
 			.name(request.getName())
@@ -75,7 +80,9 @@ public class AuthenticationService {
 			.role(RoleEnum.STUDENT)
 			.build();
 
+
 		student.addUser(user);
+		student.addEnrollment(enrollment);
 		studentRepository.save(student);
 		userRepository.save(user);
 

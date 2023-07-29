@@ -1,12 +1,10 @@
 package org.osrapazes.portalaluno.controllers;
 
 import java.util.List;
+import java.util.Arrays;
 
-import org.osrapazes.portalaluno.models.Student;
 import org.osrapazes.portalaluno.models.Subject;
 import org.osrapazes.portalaluno.models.SubjectRequest;
-import org.osrapazes.portalaluno.repositories.StudentRepository;
-import org.osrapazes.portalaluno.repositories.SubjectRepository;
 import org.osrapazes.portalaluno.services.SubjectService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 //Controle apenas utilizado para testes
 @RestController
@@ -38,8 +35,12 @@ public class SubjectController {
 
 	@PostMapping("/student/{id}/add")
 	public ResponseEntity<?> addSubjectToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest request) {
-		System.out.println("addSubjectToStudent");
 		return subjectService.addSubjectToStudent(Long.valueOf(id), request);
+	}
+
+	@PostMapping(value = "/student/{id}/add-all")
+	public ResponseEntity<?> addSubjectsToStudent(@PathVariable("id") int id, @RequestBody SubjectRequest[] request) {
+		return subjectService.addSubjectsToStudent(Long.valueOf(id), Arrays.asList(request));
 	}
 
 	@PostMapping("/student/{id}/remove")

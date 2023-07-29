@@ -1,12 +1,5 @@
 package org.osrapazes.portalaluno.configuration;
 
-import org.osrapazes.portalaluno.models.Student;
-
-import java.util.Optional;
-
-import org.osrapazes.portalaluno.models.Admin;
-import org.osrapazes.portalaluno.repositories.AdminRepository;
-import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-	private final StudentRepository studentRepository;
-	private final AdminRepository adminRepository;
 	private final UserRepository userRepository;
 
 	@Bean
@@ -35,10 +26,8 @@ public class ApplicationConfig {
 		return new UserDetailsService() {
 			@Override
 			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				return userRepository.findByEmailAll(username).get();
-				
-			}
-			
+				return userRepository.findByEmailAll(username).get();	
+			}	
 		};
 	}
 	

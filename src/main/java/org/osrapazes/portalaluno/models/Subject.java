@@ -3,10 +3,7 @@ package org.osrapazes.portalaluno.models;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,11 +29,11 @@ import lombok.Builder;
 @ToString(exclude = { "subjects"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "students"})
 public class Subject {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "disciplina_id")
 	private Long subjectId;
-
 	private String professor;
 
 	@Column(name= "nome")
@@ -50,12 +47,12 @@ public class Subject {
 		this.professor = professor;
 		this.name = name;
 	}
-	
+  
 	public Set<Student> getStudents() {
 		return this.students;
 	}
 }
-
+	
 
 
 

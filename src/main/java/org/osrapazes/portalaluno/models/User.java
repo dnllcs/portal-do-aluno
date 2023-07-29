@@ -7,13 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -26,8 +21,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Setter;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.osrapazes.portalaluno.models.RoleEnum;
 
 @Entity
 @Table(name = "usuario")
@@ -36,6 +29,7 @@ import org.osrapazes.portalaluno.models.RoleEnum;
 @Getter
 @Setter
 public class User implements UserDetails {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "usuario_id")
@@ -64,40 +58,33 @@ public class User implements UserDetails {
 		.stream().filter(Optional::isPresent).findFirst().get();
 	}
 
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
 		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
 		return this.email;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 }

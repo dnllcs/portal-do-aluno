@@ -1,119 +1,155 @@
 package org.osrapazes.portalaluno.init;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.osrapazes.portalaluno.configuration.auth.AuthenticationService;
 import org.osrapazes.portalaluno.configuration.auth.RegisterRequestAdmin;
 import org.osrapazes.portalaluno.configuration.auth.RegisterRequestStudent;
-import org.osrapazes.portalaluno.models.RoleEnum;
 import org.osrapazes.portalaluno.models.Student;
 import org.osrapazes.portalaluno.models.Subject;
-import org.osrapazes.portalaluno.models.User;
+import org.osrapazes.portalaluno.models.SubjectRequest;
+import org.osrapazes.portalaluno.models.Enrollment;
+import org.osrapazes.portalaluno.repositories.EnrollmentRepository;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.SubjectRepository;
-import org.osrapazes.portalaluno.repositories.UserRepository;
+import org.osrapazes.portalaluno.services.PdfGeneratorService;
+import org.osrapazes.portalaluno.services.SubjectService;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 
 //Cria na inicializacao da aplicacao um registro de aluno(email:alunoTeste@gmail.com senha:123) 
 //e um registro de admin(email:adminTeste@gmail.com senha:123)
 @Component
+@RequiredArgsConstructor
+@Profile("dev")
 public class ApplicationStartRunner implements CommandLineRunner {
-
 
 	private final AuthenticationService authenticationService;
 	private final SubjectRepository subjectRepository;
+	private final SubjectService subjectService;
+	private final PdfGeneratorService pdfService;
 	private final StudentRepository studentRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final UserRepository userRepository;
-
-	public ApplicationStartRunner(AuthenticationService authenticationService, SubjectRepository subjectRepository, StudentRepository studentRepository, PasswordEncoder passwordEncoder, UserRepository userRepository) {
-		this.authenticationService = authenticationService;
-		this.subjectRepository = subjectRepository;
-		this.studentRepository = studentRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.userRepository = userRepository;
-	}
+	private final EnrollmentRepository enrollmentRepository;
 
 	@Override
 	public void run(String ...args) throws Exception {
-		authenticationService.register(new RegisterRequestStudent("alunoTeste", "alunoTeste@gmail.com", "123", "cpf123", "rg123", LocalDate.of(1995, 10, 10)));
+		Enrollment enr = Enrollment.builder()
+			.enrollmentCode("321")
+			.enrollmentDate(LocalDate.of(2020, 1, 1))
+			.build();
+		enrollmentRepository.save(enr);
+
+		authenticationService.register(new RegisterRequestStudent("alunoTeste",
+			"alunoTeste@gmail.com", "123", "cpf123", "rg123", LocalDate.of(1995, 10, 10), "321"));
 		authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123"));
-		Student std1 = Student.builder()
-			.name("Student1")
-			.email("Student1@email")
-			.cpf("cpf")
-			.rg("rg")
-			.status(true)
-			.birthDate(LocalDate.of(2000, 5, 11))
-			.subjects((Set) new HashSet<>())
+
+		RegisterRequestStudent studentRequest1 = RegisterRequestStudent
+			.builder()
+			.name("Student - 1")
+			.email("Student1@gmail.com")
+			.password("123")
+			.cpf("123.123")
+			.rg("123-123")
+			.birthDate(LocalDate.of(2000, 1, 10))
+			.enrollmentCode("123")
 			.build();
-		Student std2 = Student.builder()
-			.name("Student2")
-			.email("Student2@email")
-			.cpf("cpf")
-			.rg("rg")
-			.status(true)
-			.birthDate(LocalDate.of(2000, 1, 17))
-			.subjects((Set) new HashSet<>())
+		RegisterRequestStudent studentRequest2 = RegisterRequestStudent
+			.builder()
+			.name("Student - 2")
+			.email("Student2@gmail.com")
+			.password("123")
+			.cpf("123.123")
+			.rg("123-123")
+			.birthDate(LocalDate.of(2000, 2, 20))
+			.enrollmentCode("234")
 			.build();
-		Student std3 = Student.builder()
-			.name("Student3")
-			.email("Student3@email")
-			.cpf("cpf")
-			.rg("rg")
-			.status(true)
-			.birthDate(LocalDate.of(2000, 7, 15))
-			.subjects((Set) new HashSet<>())
+		RegisterRequestStudent studentRequest3 = RegisterRequestStudent
+			.builder()
+			.name("Student - 3")
+			.email("Student3@gmail.com")
+			.password("123")
+			.cpf("123.123")
+			.rg("123-123")
+			.birthDate(LocalDate.of(2000, 3, 30))
+			.enrollmentCode("345")
 			.build();
 
-		User user3 = User.builder()
-			.email("Student3@email")
-			.password(passwordEncoder.encode("password"))
-			.role(RoleEnum.STUDENT)
+		Enrollment enrollment1 = Enrollment.builder()
+			.enrollmentCode("123")
+			.enrollmentDate(LocalDate.of(2020, 2, 2))
 			.build();
 
-		Subject sub1 = Subject.builder()
-			.name("Subject1")
-			.professor("professor1")
+		Enrollment enrollment2 = Enrollment.builder()
+			.enrollmentCode("234")
+			.enrollmentDate(LocalDate.of(2020, 4, 4))
+			.build();
+		
+		Enrollment enrollment3 = Enrollment.builder()
+			.enrollmentCode("345")
+			.enrollmentDate(LocalDate.of(2020, 6, 6))
+			.build();
+				
+		Subject subject1 = Subject.builder()
+			.name("Subject - 1")
+			.professor("Professor - 1")
 			.students((Set) new HashSet<>())
 			.build();
-		Subject sub2 = Subject.builder()
-			.name("Subject2")
-			.professor("professor2")
+		Subject subject2 = Subject.builder()
+			.name("Subject - 2")
+			.professor("Professor - 2")
 			.students((Set) new HashSet<>())
 			.build();
-		Subject sub3 = Subject.builder()
-			.name("Subject3")
-			.professor("professor3")
+		Subject subject3 = Subject.builder()
+			.name("Subject - 3")
+			.professor("Professor - 3")
 			.students((Set) new HashSet<>())
 			.build();
+		Subject subject4 = Subject.builder()
+			.name("Subject - 4")
+			.professor("Professor - 4")
+			.students((Set) new HashSet<>())
+			.build();
+		Subject subject5 = Subject.builder()
+			.name("Subject - 5")
+			.professor("Professor - 5")
+			.students((Set) new HashSet<>())
+			.build();
+		Subject subject6 = Subject.builder()
+			.name("Subject - 6")
+			.professor("Professor - 6")
+			.students((Set) new HashSet<>())
+			.build();
+		List<Subject> subjectList = new ArrayList<>();
 
+		subjectList.addAll(Arrays.asList(subject1, subject2, subject3, subject4, subject5, subject6));
 
-		std3.addUser(user3);
+		enrollmentRepository.saveAll(Arrays.asList(enrollment1, enrollment2, enrollment3));
 
-		std1.addSubject(sub1);
-		std1.addSubject(sub2);
-		std1.addSubject(sub3);
-		std2.addSubject(sub1);
-		std2.addSubject(sub3);
-		std3.addSubject(sub2);
+		authenticationService.register(studentRequest1);
+		authenticationService.register(studentRequest2);
+		authenticationService.register(studentRequest3);
+
+		Student student1 = studentRepository.findByEmail(studentRequest1.getEmail()).get(); 
+		Student student2 = studentRepository.findByEmail(studentRequest2.getEmail()).get(); 
+		Student student3 = studentRepository.findByEmail(studentRequest3.getEmail()).get(); 
 		
-		subjectRepository.save(sub1);
-		subjectRepository.save(sub2);
-		subjectRepository.save(sub3);
+		subjectList.stream().forEach(sub -> subjectRepository.save(sub));
 
-		studentRepository.save(std1);
-		studentRepository.save(std2);
-		studentRepository.save(std3);
-		userRepository.save(user3);
-
-		
-		
+		subjectService.addSubjectsToStudent(student1.getStudentId(), subjectList.stream()
+			.map(sub -> new SubjectRequest(sub.getName(), sub.getProfessor())).collect(Collectors.toList()));
+		subjectService.addSubjectsToStudent(student2.getStudentId(), subjectList.stream()
+			.map(sub -> new SubjectRequest(sub.getName(), sub.getProfessor())).collect(Collectors.toList()).subList(0, subjectList.size()/2));
+		subjectService.addSubjectToStudent(student3.getStudentId(), new SubjectRequest(subject1.getName(), subject1.getProfessor()));
+		pdfService.generateEnrollmentStatement(student1, "src/test/Comprovante de Matricula - "+ student1.getStudentId() +".pdf");
 
 	}
-	
 }

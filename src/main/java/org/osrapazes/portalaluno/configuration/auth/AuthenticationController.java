@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-
 	private final AuthenticationService authenticationService;
-
 
 	//controle de gerenciamento de login/registro
 	//endpoints nao relacionados diretamente com autenticacao nao devem ser adicionados

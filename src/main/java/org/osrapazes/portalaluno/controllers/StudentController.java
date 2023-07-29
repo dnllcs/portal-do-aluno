@@ -1,23 +1,23 @@
 package org.osrapazes.portalaluno.controllers;
 
 import org.osrapazes.portalaluno.models.Student;
-import org.osrapazes.portalaluno.models.StudentRequestDTO;
 import org.osrapazes.portalaluno.models.StudentResponseDTO;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.services.PdfGeneratorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("v1/students")
+@RequiredArgsConstructor
 public class StudentController {
-    @Autowired
-    private StudentRepository repository;
-    @Autowired
-    private PdfGeneratorService pdfGeneratorService;
+
+    private final StudentRepository repository;
+    private final PdfGeneratorService pdfGeneratorService;
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
@@ -26,6 +26,7 @@ public class StudentController {
         List<StudentResponseDTO> studentList = repository.findAll().stream().map(StudentResponseDTO::new).toList();
         return studentList;
     }
+
     @GetMapping("/enrollment/{id}")
     public ResponseEntity<String> printStudentById(@PathVariable Long id) {
         Student student = repository.findById(id).orElse(null);
