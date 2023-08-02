@@ -97,7 +97,12 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			.enrollmentCode("345")
 			.enrollmentDate(LocalDate.of(2020, 6, 6))
 			.build();
-				
+
+		Enrollment enrollment4 = Enrollment.builder()
+				.enrollmentCode("222")
+				.enrollmentDate(LocalDate.of(2020, 2, 2))
+				.build();
+
 		Subject subject1 = Subject.builder()
 			.name("Subject - 1")
 			.professor("Professor - 1")
@@ -132,7 +137,7 @@ public class ApplicationStartRunner implements CommandLineRunner {
 
 		subjectList.addAll(Arrays.asList(subject1, subject2, subject3, subject4, subject5, subject6));
 
-		enrollmentRepository.saveAll(Arrays.asList(enrollment1, enrollment2, enrollment3));
+		enrollmentRepository.saveAll(Arrays.asList(enrollment1, enrollment2, enrollment3, enrollment4));
 
 		authenticationService.register(studentRequest1);
 		authenticationService.register(studentRequest2);
