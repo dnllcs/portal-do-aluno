@@ -8,6 +8,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +27,7 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-
+    @Async
     public void sendConfirmationEmail(String destination, String name) {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper;
@@ -50,5 +51,33 @@ public class EmailService {
         }
 
         javaMailSender.send(message);
+    }
+
+    @Async
+    public void sendPasswordResetEmail(String destination, String token) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper;
+
+        try {
+            helper = new MimeMessageHelper(message, true);
+            helper.setFrom(emailUsername);
+            helper.setTo(destination);
+            helper.setSubject("Redefinição de Senha");
+
+            String htmlBody = "<h3>Você solicitou a redefinição de senha no Portal de Alunos UniFatecie.</h3>"
+                    + "<p>Clique no link abaixo para criar uma nova senha:</p>"
+                    + "<a href='http://localhost:8080/v1/reset-password/" + token + "'>Redefinir Senha</a>"
+                    + "<br></br>"
+                    + "<img src='cid:logo'>";
+
+            helper.setText(htmlBody, true);
+
+            FileSystemResource image = new FileSystemResource("src/main/resources/images/logo.png");
+            helper.addInline("logo", image);
+
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -16,6 +16,7 @@ import org.osrapazes.portalaluno.models.Subject;
 import org.osrapazes.portalaluno.models.SubjectRequest;
 import org.osrapazes.portalaluno.models.Enrollment;
 import org.osrapazes.portalaluno.repositories.EnrollmentRepository;
+import org.osrapazes.portalaluno.repositories.PasswordResetTokenRepository;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.SubjectRepository;
 import org.osrapazes.portalaluno.services.PdfGeneratorService;
@@ -39,6 +40,7 @@ public class ApplicationStartRunner implements CommandLineRunner {
 	private final PdfGeneratorService pdfService;
 	private final StudentRepository studentRepository;
 	private final EnrollmentRepository enrollmentRepository;
+	private final PasswordResetTokenRepository passwordResetTokenRepository;
 
 	@Override
 	public void run(String ...args) throws Exception {
@@ -51,6 +53,8 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		authenticationService.register(new RegisterRequestStudent("alunoTeste",
 			"alunoTeste@gmail.com", "123", "cpf123", "rg123", LocalDate.of(1995, 10, 10), "321"));
 		authenticationService.register(new RegisterRequestAdmin("adminTeste", "adminTeste@gmail.com", "123"));
+
+		passwordResetTokenRepository.findAll();
 
 		RegisterRequestStudent studentRequest1 = RegisterRequestStudent
 			.builder()
