@@ -1,6 +1,7 @@
 package org.osrapazes.portalaluno.init;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,13 +14,19 @@ import org.osrapazes.portalaluno.configuration.auth.RegisterRequestAdmin;
 import org.osrapazes.portalaluno.configuration.auth.RegisterRequestStudent;
 import org.osrapazes.portalaluno.models.Student;
 import org.osrapazes.portalaluno.models.Subject;
+import org.osrapazes.portalaluno.models.Assignment;
 import org.osrapazes.portalaluno.models.SubjectRequest;
+import org.osrapazes.portalaluno.models.Assignment;
+import org.osrapazes.portalaluno.models.AssignmentResponse;
+import org.osrapazes.portalaluno.models.AssignmentRequest;
 import org.osrapazes.portalaluno.models.Enrollment;
 import org.osrapazes.portalaluno.repositories.EnrollmentRepository;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.SubjectRepository;
+import org.osrapazes.portalaluno.repositories.AssignmentRepository;
 import org.osrapazes.portalaluno.services.PdfGeneratorService;
 import org.osrapazes.portalaluno.services.SubjectService;
+import org.osrapazes.portalaluno.services.AssignmentService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -39,6 +46,9 @@ public class ApplicationStartRunner implements CommandLineRunner {
 	private final PdfGeneratorService pdfService;
 	private final StudentRepository studentRepository;
 	private final EnrollmentRepository enrollmentRepository;
+	private final AssignmentService assignmentService;
+	private final AssignmentRepository assignmentRepository;
+
 
 	@Override
 	public void run(String ...args) throws Exception {
@@ -151,5 +161,29 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		subjectService.addSubjectToStudent(student3.getStudentId(), new SubjectRequest(subject1.getName(), subject1.getProfessor()));
 		pdfService.generateEnrollmentStatement(student1, "src/test/Comprovante de Matricula - "+ student1.getStudentId() +".pdf");
 
+		AssignmentRequest assignmentRequest1 =  new AssignmentRequest("Assignment - 1", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20)); 
+		AssignmentRequest assignmentRequest2 =  new AssignmentRequest("Assignment - 2", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+		AssignmentRequest assignmentRequest3 =  new AssignmentRequest("Assignment - 3", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+		AssignmentRequest assignmentRequest4 =  new AssignmentRequest("Assignment - 4", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+		AssignmentRequest assignmentRequest5 =  new AssignmentRequest("Assignment - 5", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+
+
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest1);
+		assignmentRepository.save(Assignment.builder()
+			.title("title")
+			.description("description")
+			.subject(subject2)
+			.startDate(LocalDateTime.of(2020, 10, 10, 10, 10))
+			.endDate(LocalDateTime.of(2020, 10, 10, 20, 20))
+			.build());
+
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest2);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest3);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(4), assignmentRequest4);		
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(4), assignmentRequest5);
+		List<AssignmentResponse> listAssignment = assignmentRepository.findAllAssingmentsByStudentId(Long.valueOf(2))
+			.stream()
+			.map(AssignmentResponse::new)
+			.collect(Collectors.toList());
 	}
 }

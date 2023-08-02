@@ -37,7 +37,7 @@ import jakarta.persistence.Table;
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class, 
   property = "studentId")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "subjects"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "subjects", "enrollment", "user"})
 public class Student{
 	
 	@Id
@@ -60,6 +60,7 @@ public class Student{
 	
 	@OneToOne
 	@JoinColumn(name = "matricula_id")
+	@JsonIgnoreProperties("student")
 	private Enrollment enrollment;
 
 	@ManyToMany(fetch = FetchType.LAZY)
