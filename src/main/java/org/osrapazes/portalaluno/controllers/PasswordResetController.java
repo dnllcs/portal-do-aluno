@@ -28,9 +28,7 @@ public class PasswordResetController {
     @PostMapping("/reset/{token}")
     public ResponseEntity<String> resetPassword(@PathVariable String token, @RequestBody String newPassword) {
         try {
-            System.out.println(newPassword);
             String hashedPassword = passwordEncoder.encode(newPassword);
-            System.out.println(hashedPassword);
             passwordResetTokenService.resetPassword(token, hashedPassword);
             return ResponseEntity.ok("Senha redefinida com sucesso.");
         } catch (Exception e) {

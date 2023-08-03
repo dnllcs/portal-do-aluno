@@ -23,15 +23,24 @@ public class PdfGeneratorService {
             writer.setPageEvent(new PdfFooter());
 
             document.open();
-            Paragraph name = new Paragraph("Nome: " + student.getName());
-            Paragraph cpf = new Paragraph("CPF: " + student.getCpf());
-            Paragraph rg = new Paragraph("RG: " + student.getRg());
 
-            document.add(name);
-            document.add(cpf);
-            document.add(rg);
+            Image image = Image.getInstance("src/main/resources/images/logo.png");
+            image.setAlignment(Element.ALIGN_CENTER);
+            image.scalePercent(50);
 
-            document.add(new Paragraph(""));
+            Paragraph title = new Paragraph("DECLARAÇÃO", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK));
+            title.setAlignment(Element.ALIGN_CENTER);
+
+            Paragraph text = new Paragraph("Declaramos, para os fins a que se fizerem necessários, que " + student.getName() +
+            ", portador do CPF de número" + student.getCpf() + "é aluno(a) vinculado(a) a esta instituição, sob o número " + student.getEnrollment().getEnrollmentCode());
+
+            document.add(image);
+            document.add(new Paragraph("\n"));
+            document.add(title);
+            document.add(new Paragraph("\n"));
+            document.add(text);
+
+            document.add(new Paragraph("\n"));
 
             document.close();
         } catch (Exception e) {
