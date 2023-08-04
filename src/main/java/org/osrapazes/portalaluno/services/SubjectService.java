@@ -8,7 +8,9 @@ import org.osrapazes.portalaluno.models.Student;
 import org.osrapazes.portalaluno.models.StudentResponseDTO;
 import org.osrapazes.portalaluno.models.Subject;
 import org.osrapazes.portalaluno.models.SubjectRequest;
+import org.osrapazes.portalaluno.models.SubjectResponse;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
+import org.osrapazes.portalaluno.repositories.ProfessorRepository;
 import org.osrapazes.portalaluno.repositories.SubjectRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,19 +26,20 @@ public class SubjectService {
 
 	private final StudentRepository studentRepository;
 	private final SubjectRepository subjectRepository;
+	private final ProfessorRepository professorRepository;
 
-	public List<Subject> getAllSubjects() {
-		return subjectRepository.findAll();
+	public ResponseEntity<List<SubjectResponse>> getAllSubjects() {
+		return ResponseEntity.accepted().body(subjectRepository.findAll().stream().map(SubjectResponse::new).toList());
 	}
 
-	public List<Subject> getSubjects(Long id) {
+	public ResponseEntity<List<SubjectResponse>> getSubjects(Long id) {
 		Student std = studentRepository.getById(id);
-		return std.getSubjectsAsList();
+		return ResponseEntity.accepted().body(std.getSubjectsAsList().stream().map(SubjectResponse::new).toList());
 	}
 
 	public ResponseEntity<?> addSubjectToStudent(Long id, SubjectRequest request) {
 		Optional<Student> studentOptional = studentRepository.findByIdEagerly(Long.valueOf(id));
-		Optional<Subject> subjectOptional = subjectRepository.findByNameAndProfessor(request.name(), request.professor());
+		Optional<Subject> subjectOptional = subjectRepository.findByNameAndProfessorTeste(request.name(), request.professor());
 		if(studentOptional.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student id:" + id + " not found");
 		}
@@ -52,7 +55,7 @@ public class SubjectService {
 	public ResponseEntity<?> addSubjectsToStudent(Long id, List<SubjectRequest> request) {
 		Optional<Student> studentOptional = studentRepository.findByIdEagerly(Long.valueOf(id));
 		List<Subject> subjects = request.stream().map(req -> subjectRepository.
-			findByNameAndProfessor(req.name(), req.professor())
+			findByNameAndProfessorTeste(req.professor(), req.name())
 			.orElseThrow(() -> new EntityNotFoundException("Subject:" + req.name() + " professor: " + req.professor() + " not found")))
 			.collect(Collectors.toList());
 		if(studentOptional.isEmpty()) {
@@ -66,7 +69,7 @@ public class SubjectService {
 
 	public ResponseEntity<?> removeSubjectToStudent(Long id, SubjectRequest request) {
 		Optional<Student> studentOptional = studentRepository.findById(Long.valueOf(id));
-		Optional<Subject> subjectOptional = subjectRepository.findByNameAndProfessor(request.name(), request.professor());
+		Optional<Subject> subjectOptional = subjectRepository.findByNameAndProfessorTeste(request.name(), request.professor());
 		if(studentOptional.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student id:" + id + " not found");
 		}

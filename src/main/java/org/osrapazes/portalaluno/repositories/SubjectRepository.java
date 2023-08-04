@@ -13,14 +13,12 @@ import org.springframework.stereotype.Repository;
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
 	Optional<Subject> findByName(String name);
-	Optional<Subject> findByProfessor(String professor);
-	
-	@EntityGraph(attributePaths = {"students"})
-	Optional<Subject> findByNameAndProfessor(String name, String professor);
+
+	@EntityGraph(attributePaths = {"professor", "assignments", "students"})
+	@Query("SELECT s FROM Subject s, Professor p, IN (p.subjects) ps WHERE s.subjectId = ps.subjectId AND s.name = :nameSubject AND p.name = :nameProfessor")
+	Optional<Subject> findByNameAndProfessorTeste(@Param("nameProfessor") String nameProfessor, @Param("nameSubject") String nameSubject);
 
 	@EntityGraph(attributePaths = {"assignments", "assignments.subject"})
 	@Query("FROM Subject s WHERE s.subjectId = :id")
 	Optional<Subject> findByIdEagerly(@Param("id") Long id);
-
-
-}
+} 

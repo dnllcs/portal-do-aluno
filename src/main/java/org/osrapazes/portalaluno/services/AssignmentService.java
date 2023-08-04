@@ -25,13 +25,13 @@ public class AssignmentService {
 	private final SubjectRepository subjectRepository;
 	private final StudentRepository studentRepository;
 
-	public List<Assignment> getAllAssignments() {
-		return assignmentRepository.findAll();
+	public ResponseEntity<List<AssignmentResponse>> getAllAssignments() {
+		return ResponseEntity.accepted().body(assignmentRepository.findAll().stream().map(AssignmentResponse::new).toList());
 	}
 
-	public List<AssignmentResponse> getAssignmentsBySubjectId(Long id) {
+	public ResponseEntity<List<AssignmentResponse>> getAssignmentsBySubjectId(Long id) {
 		Subject subject = subjectRepository.getById(id);
-		return subject.getAssignments().stream().map(AssignmentResponse::new).toList();
+		return ResponseEntity.accepted().body(subject.getAssignments().stream().map(AssignmentResponse::new).toList());
 	}
 
 	public ResponseEntity<?> addAssignmentToSubjectById(Long subjectId, AssignmentRequest request) {
