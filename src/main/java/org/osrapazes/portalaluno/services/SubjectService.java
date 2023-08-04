@@ -39,7 +39,7 @@ public class SubjectService {
 
 	public ResponseEntity<?> addSubjectToStudent(Long id, SubjectRequest request) {
 		Optional<Student> studentOptional = studentRepository.findByIdEagerly(Long.valueOf(id));
-		Optional<Subject> subjectOptional = subjectRepository.findByNameAndProfessorTeste(request.name(), request.professor());
+		Optional<Subject> subjectOptional = subjectRepository.findByNameAndProfessorTeste(request.professor(), request.name());
 		if(studentOptional.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student id:" + id + " not found");
 		}
@@ -68,8 +68,8 @@ public class SubjectService {
 	}
 
 	public ResponseEntity<?> removeSubjectToStudent(Long id, SubjectRequest request) {
-		Optional<Student> studentOptional = studentRepository.findById(Long.valueOf(id));
-		Optional<Subject> subjectOptional = subjectRepository.findByNameAndProfessorTeste(request.name(), request.professor());
+		Optional<Student> studentOptional = studentRepository.findByIdEagerly(Long.valueOf(id));
+		Optional<Subject> subjectOptional = subjectRepository.findByNameAndProfessorTeste(request.professor(), request.name());
 		if(studentOptional.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student id:" + id + " not found");
 		}
