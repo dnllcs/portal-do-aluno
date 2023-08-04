@@ -29,12 +29,12 @@ public class AssignmentController {
 	private final AssignmentService assignmentService;
 
 	@GetMapping("")
-	public List<Assignment> getAllAssignments() {
+	public ResponseEntity<?> getAllAssignments() {
 		return assignmentService.getAllAssignments();
 	}
 
 	@GetMapping("subject/{id}")
-	public List<AssignmentResponse> getAssignmentsBySubjectId(@PathVariable("id") int id) {
+	public ResponseEntity<?> getAssignmentsBySubjectId(@PathVariable("id") int id) {
 		return assignmentService.getAssignmentsBySubjectId(Long.valueOf(id));
 	}
 
