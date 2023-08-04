@@ -5,7 +5,7 @@ import org.osrapazes.portalaluno.models.PasswordResetToken;
 import org.osrapazes.portalaluno.models.User;
 import org.osrapazes.portalaluno.repositories.PasswordResetTokenRepository;
 import org.osrapazes.portalaluno.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;

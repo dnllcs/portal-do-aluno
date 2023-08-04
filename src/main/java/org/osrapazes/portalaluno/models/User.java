@@ -41,6 +41,8 @@ public class User implements UserDetails {
 	private Student student;
 	@OneToOne(mappedBy = "user")
 	private Admin admin;
+	@OneToOne(mappedBy = "user")
+	private Professor professor;
 
 	public User() {}
 
@@ -52,9 +54,14 @@ public class User implements UserDetails {
 		this.admin = admin;
 	}
 
+	public void setProfessor(Professor professor) {
+		this.professor = professor;
+	}
+
 	public Optional<?> owner() {
 		return Arrays.asList(Optional.ofNullable(this.student),
-		 Optional.ofNullable(this.admin))
+			Optional.ofNullable(this.admin),
+			Optional.ofNullable(this.professor))
 		.stream().filter(Optional::isPresent).findFirst().get();
 	}
 

@@ -5,12 +5,17 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,16 +30,20 @@ import lombok.Builder;
 @Entity
 @Builder
 @Table(name = "disciplina")
-@EqualsAndHashCode(exclude = { "subjects"})
-@ToString(exclude = { "subjects"})
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "students"})
+@EqualsAndHashCode(exclude = { "subjects", "assignments"})
+@ToString(exclude = { "subjects", "assignments"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "assignments"})
 public class Subject {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "disciplina_id")
 	private Long subjectId;
-	private String professor;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "professor_id")
+	@JsonIgnoreProperties("subjects")
+	private Professor professor;
 
 	@Column(name= "nome")
 	private String name;
@@ -43,7 +52,15 @@ public class Subject {
 	@JsonIgnoreProperties("subjects")
 	private Set<Student> students = new HashSet<>();
 
-	public Subject(String professor, String name) {
+	@OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("subject")
+	private Set<Assignment> assignments;
+
+	public void setProfessor(Professor professor) {
+		this.professor = professor;
+	}
+
+	public Subject(Professor professor, String name) {
 		this.professor = professor;
 		this.name = name;
 	}
@@ -51,10 +68,13 @@ public class Subject {
 	public Set<Student> getStudents() {
 		return this.students;
 	}
-}
+
+	public void addAssignment(Assignment assignment) {
+		this.assignments.add(assignment);
+		assignment.addSubject(this);
+	}
 	
-
-
-
-
-
+	public void removeAssignment(Assignment assignment) {
+		assignments.remove(assignment);
+	}
+}

@@ -1,6 +1,7 @@
 package org.osrapazes.portalaluno.init;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,18 +12,28 @@ import java.util.stream.Collectors;
 import org.osrapazes.portalaluno.configuration.auth.AuthenticationService;
 import org.osrapazes.portalaluno.configuration.auth.RegisterRequestAdmin;
 import org.osrapazes.portalaluno.configuration.auth.RegisterRequestStudent;
+import org.osrapazes.portalaluno.configuration.auth.RegisterRequestProfessor;
 import org.osrapazes.portalaluno.models.Student;
 import org.osrapazes.portalaluno.models.Subject;
+import org.osrapazes.portalaluno.models.Assignment;
 import org.osrapazes.portalaluno.models.SubjectRequest;
+import org.osrapazes.portalaluno.models.Assignment;
+import org.osrapazes.portalaluno.models.AssignmentResponse;
+import org.osrapazes.portalaluno.models.AssignmentRequest;
 import org.osrapazes.portalaluno.models.Enrollment;
+import org.osrapazes.portalaluno.models.Professor;
 import org.osrapazes.portalaluno.repositories.EnrollmentRepository;
+import org.osrapazes.portalaluno.repositories.ProfessorRepository;
 import org.osrapazes.portalaluno.repositories.PasswordResetTokenRepository;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.SubjectRepository;
+import org.osrapazes.portalaluno.repositories.AssignmentRepository;
 import org.osrapazes.portalaluno.services.PdfGeneratorService;
 import org.osrapazes.portalaluno.services.SubjectService;
+import org.osrapazes.portalaluno.services.AssignmentService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +51,10 @@ public class ApplicationStartRunner implements CommandLineRunner {
 	private final PdfGeneratorService pdfService;
 	private final StudentRepository studentRepository;
 	private final EnrollmentRepository enrollmentRepository;
+	private final AssignmentService assignmentService;
+	private final AssignmentRepository assignmentRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final ProfessorRepository professorRepository;
 	private final PasswordResetTokenRepository passwordResetTokenRepository;
 
 	@Override
@@ -107,41 +122,91 @@ public class ApplicationStartRunner implements CommandLineRunner {
 				.enrollmentDate(LocalDate.of(2020, 2, 2))
 				.build();
 
+        RegisterRequestProfessor professorRequest1 = RegisterRequestProfessor.builder()
+                .name("Mauricio")
+                .email("professor1@example.com")
+                .password("123")
+                .cpf("123")
+                .rg("123")
+                .birthDate(LocalDate.of(1980, 5, 10))
+                .build();
+                
+        RegisterRequestProfessor professorRequest2 = RegisterRequestProfessor.builder()
+                .name("Marcos")
+                .email("professor2@example.com")
+                .password("123")
+                .cpf("123")
+                .rg("123")
+                .birthDate(LocalDate.of(1975, 8, 10))
+                .build();
+
+        RegisterRequestProfessor professorRequest3 = RegisterRequestProfessor.builder()
+                .name("Marcelo")
+                .email("professor3@example.com")
+                .password("123")
+                .cpf("123")
+                .rg("123")
+                .birthDate(LocalDate.of(1990, 2, 10))
+                .build();
+
+
+
+        authenticationService.register(professorRequest1);
+        authenticationService.register(professorRequest2);
+        authenticationService.register(professorRequest3);
+
+        Professor professor1 = professorRepository.findByEmail(professorRequest1.getEmail()).orElseThrow();
+        Professor professor2 = professorRepository.findByEmail(professorRequest2.getEmail()).orElseThrow();
+        Professor professor3 = professorRepository.findByEmail(professorRequest3.getEmail()).orElseThrow();
+
+
 		Subject subject1 = Subject.builder()
 			.name("Subject - 1")
-			.professor("Professor - 1")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject2 = Subject.builder()
 			.name("Subject - 2")
-			.professor("Professor - 2")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject3 = Subject.builder()
 			.name("Subject - 3")
-			.professor("Professor - 3")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject4 = Subject.builder()
 			.name("Subject - 4")
-			.professor("Professor - 4")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject5 = Subject.builder()
 			.name("Subject - 5")
-			.professor("Professor - 5")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject6 = Subject.builder()
 			.name("Subject - 6")
-			.professor("Professor - 6")
 			.students((Set) new HashSet<>())
 			.build();
+
+		professor1.addSubject(subject1);
+		professor1.addSubject(subject2);
+
+		professor2.addSubject(subject3);
+		professor2.addSubject(subject4);
+
+		professor3.addSubject(subject5);
+		professor3.addSubject(subject6);
+
+
+
 		List<Subject> subjectList = new ArrayList<>();
+		List<Professor> professorList = new ArrayList<>();
+
 
 		subjectList.addAll(Arrays.asList(subject1, subject2, subject3, subject4, subject5, subject6));
+		subjectList.stream().forEach(sub -> subjectRepository.save(sub));
 
-		enrollmentRepository.saveAll(Arrays.asList(enrollment1, enrollment2, enrollment3, enrollment4));
+		professorList.addAll(Arrays.asList(professor1, professor2, professor3));
+		professorRepository.saveAll(professorList);
+		
+		enrollmentRepository.saveAll(Arrays.asList(enrollment1, enrollment2, enrollment3));
 
 		authenticationService.register(studentRequest1);
 		authenticationService.register(studentRequest2);
@@ -150,15 +215,37 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		Student student1 = studentRepository.findByEmail(studentRequest1.getEmail()).get(); 
 		Student student2 = studentRepository.findByEmail(studentRequest2.getEmail()).get(); 
 		Student student3 = studentRepository.findByEmail(studentRequest3.getEmail()).get(); 
-		
-		subjectList.stream().forEach(sub -> subjectRepository.save(sub));
 
 		subjectService.addSubjectsToStudent(student1.getStudentId(), subjectList.stream()
-			.map(sub -> new SubjectRequest(sub.getName(), sub.getProfessor())).collect(Collectors.toList()));
+			.map(sub -> new SubjectRequest(sub.getName(), sub.getProfessor().getName())).collect(Collectors.toList()));
 		subjectService.addSubjectsToStudent(student2.getStudentId(), subjectList.stream()
-			.map(sub -> new SubjectRequest(sub.getName(), sub.getProfessor())).collect(Collectors.toList()).subList(0, subjectList.size()/2));
-		subjectService.addSubjectToStudent(student3.getStudentId(), new SubjectRequest(subject1.getName(), subject1.getProfessor()));
+			.map(sub -> new SubjectRequest(sub.getName(), sub.getProfessor().getName())).collect(Collectors.toList()).subList(0, subjectList.size()/2));
+		subjectService.addSubjectToStudent(student3.getStudentId(), new SubjectRequest(subject1.getName(), subject1.getProfessor().getName()));
 		pdfService.generateEnrollmentStatement(student1, "src/test/Comprovante de Matricula - "+ student1.getStudentId() +".pdf");
 
+		AssignmentRequest assignmentRequest1 =  new AssignmentRequest("Assignment - 1", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20)); 
+		AssignmentRequest assignmentRequest2 =  new AssignmentRequest("Assignment - 2", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+		AssignmentRequest assignmentRequest3 =  new AssignmentRequest("Assignment - 3", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+		AssignmentRequest assignmentRequest4 =  new AssignmentRequest("Assignment - 4", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+		AssignmentRequest assignmentRequest5 =  new AssignmentRequest("Assignment - 5", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+
+
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest1);
+		assignmentRepository.save(Assignment.builder()
+			.title("title")
+			.description("description")
+			.subject(subject2)
+			.startDate(LocalDateTime.of(2020, 10, 10, 10, 10))
+			.endDate(LocalDateTime.of(2020, 10, 10, 20, 20))
+			.build());
+
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest2);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest3);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(4), assignmentRequest4);		
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(4), assignmentRequest5);
+		List<AssignmentResponse> listAssignment = assignmentRepository.findAllAssingmentsByStudentId(Long.valueOf(2))
+			.stream()
+			.map(AssignmentResponse::new)
+			.collect(Collectors.toList());
 	}
 }

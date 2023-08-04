@@ -24,12 +24,12 @@ public class SubjectController {
 		this.subjectService = subjectService;
 	}
 	@GetMapping("")
-	public List<Subject> getAllSubjects() {
+	public ResponseEntity<?> getAllSubjects() {
 		return subjectService.getAllSubjects();
 	}
 
 	@GetMapping("/student/{id}")
-	public List<Subject> getSubjects(@PathVariable("id") int id) {
+	public ResponseEntity<?> getSubjects(@PathVariable("id") int id) {
 		return subjectService.getSubjects(Long.valueOf(id));
 	}
 

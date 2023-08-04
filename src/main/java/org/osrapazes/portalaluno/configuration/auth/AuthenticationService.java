@@ -3,6 +3,7 @@ package org.osrapazes.portalaluno.configuration.auth;
 import org.osrapazes.portalaluno.configuration.JwtService;
 import org.osrapazes.portalaluno.repositories.AdminRepository;
 import org.osrapazes.portalaluno.repositories.EnrollmentRepository;
+import org.osrapazes.portalaluno.repositories.ProfessorRepository;
 import org.osrapazes.portalaluno.repositories.StudentRepository;
 import org.osrapazes.portalaluno.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import org.osrapazes.portalaluno.models.Enrollment;
 import org.osrapazes.portalaluno.models.RoleEnum;
 import org.osrapazes.portalaluno.models.Student;
 import org.osrapazes.portalaluno.models.User;
+import org.osrapazes.portalaluno.models.Professor;
 
 import jakarta.persistence.EntityExistsException;
 //Service responsavel por processar requests dos endpoints do AuthenticationController
@@ -31,7 +33,7 @@ public class AuthenticationService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
-
+	private final ProfessorRepository professorRepository;
 
 	public AuthenticationResponse register(RegisterRequestAdmin request) throws EntityExistsException {
 		if(userRepository.findByEmailAll(request.getEmail()).isPresent()) {
@@ -91,6 +93,36 @@ public class AuthenticationService {
 			.token(jwtToken)
 			.build();
 	}	
+
+	public AuthenticationResponse register(RegisterRequestProfessor request) throws EntityExistsException {
+		if(userRepository.findByEmailAll(request.getEmail()).isPresent()) {
+			throw new EntityExistsException("Email already registered");
+		}
+
+		Professor professor = Professor.builder()
+			.name(request.getName())
+			.email(request.getEmail())
+			.cpf(request.getCpf())
+			.rg(request.getRg())
+			.status(true)
+			.build();
+
+		User user = User.builder()
+			.email(request.getEmail())
+			.password(passwordEncoder.encode(request.getPassword()))
+			.role(RoleEnum.STUDENT)
+			.build();
+
+
+		professor.addUser(user);
+		professorRepository.save(professor);
+		userRepository.save(user);
+
+		var jwtToken = jwtService.generateToken(user);
+		return AuthenticationResponse.builder()
+			.token(jwtToken)
+			.build();
+	}
 
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));

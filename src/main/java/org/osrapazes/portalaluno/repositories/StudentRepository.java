@@ -13,7 +13,10 @@ import org.springframework.stereotype.Repository;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	Optional<Student> findByEmail(String email);
-	@EntityGraph(attributePaths = {"subjects"})
+	@EntityGraph(attributePaths = {"subjects", "subjects.assignments"})
 	@Query("SELECT s FROM Student s WHERE s.id = :id")
 	Optional<Student> findByIdEagerly(@Param("id") Long id);
+
+	@EntityGraph(attributePaths = {"subjects", "subjects.assignments"})
+	Optional<Student> findById(Long id);
 }

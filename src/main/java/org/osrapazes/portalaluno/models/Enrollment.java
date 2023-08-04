@@ -8,6 +8,9 @@ import jakarta.persistence.OneToOne;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -18,6 +21,7 @@ import jakarta.persistence.Table;
 @Setter
 @Entity
 @Table(name = "matricula")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Enrollment {
 	
 	@Id
@@ -28,6 +32,8 @@ public class Enrollment {
 
 	@OneToOne(mappedBy = "enrollment")
 	private Student student;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate enrollmentDate;
 
 	public Enrollment() {}
