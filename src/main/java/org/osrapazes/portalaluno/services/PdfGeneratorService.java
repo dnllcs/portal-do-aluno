@@ -32,15 +32,15 @@ public class PdfGeneratorService {
             title.setAlignment(Element.ALIGN_CENTER);
 
             Paragraph text = new Paragraph("Declaramos, para os fins a que se fizerem necessários, que " + student.getName() +
-            ", portador do CPF de número" + student.getCpf() + "é aluno(a) vinculado(a) a esta instituição, sob o número " + student.getEnrollment().getEnrollmentCode());
+            ", portador do CPF de número " + student.getCpf() + " é aluno(a) vinculado(a) a esta instituição, sob o número de matrícula: " + student.getEnrollment().getEnrollmentCode());
 
+            Paragraph breakline = new Paragraph("\n");
             document.add(image);
-            document.add(new Paragraph("\n"));
+            document.add(breakline);
             document.add(title);
-            document.add(new Paragraph("\n"));
+            document.add(breakline);
             document.add(text);
-
-            document.add(new Paragraph("\n"));
+            document.add(breakline);
 
             document.close();
         } catch (Exception e) {
