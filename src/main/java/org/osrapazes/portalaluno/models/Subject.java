@@ -3,7 +3,9 @@ package org.osrapazes.portalaluno.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,6 +34,9 @@ import lombok.Builder;
 @Table(name = "disciplina")
 @EqualsAndHashCode(exclude = { "subjects", "assignments"})
 @ToString(exclude = { "subjects", "assignments"})
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "subjectId")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "assignments"})
 public class Subject {
 	

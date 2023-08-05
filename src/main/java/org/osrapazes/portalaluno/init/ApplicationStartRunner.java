@@ -149,41 +149,99 @@ public class ApplicationStartRunner implements CommandLineRunner {
                 .birthDate(LocalDate.of(1990, 2, 10))
                 .build();
 
+        RegisterRequestProfessor professorRequest4 = RegisterRequestProfessor.builder()
+                .name("Mauro")
+                .email("professor4@example.com")
+                .password("123")
+                .cpf("123")
+                .rg("123")
+                .birthDate(LocalDate.of(1990, 5, 15))
+                .build();
+
+        RegisterRequestProfessor professorRequest5 = RegisterRequestProfessor.builder()
+                .name("Matheus")
+                .email("professor5@example.com")
+                .password("123")
+                .cpf("123")
+                .rg("123")
+                .birthDate(LocalDate.of(1990, 6, 16))
+                .build();
+
+        RegisterRequestProfessor professorRequest6 = RegisterRequestProfessor.builder()
+                .name("Maycol")
+                .email("professor6@example.com")
+                .password("123")
+                .cpf("123")
+                .rg("123")
+                .birthDate(LocalDate.of(1990, 11, 5))
+                .build();
 
 
         authenticationService.register(professorRequest1);
         authenticationService.register(professorRequest2);
         authenticationService.register(professorRequest3);
+        authenticationService.register(professorRequest4);
+        authenticationService.register(professorRequest5);
+        authenticationService.register(professorRequest6);
+
 
         Professor professor1 = professorRepository.findByEmail(professorRequest1.getEmail()).orElseThrow();
         Professor professor2 = professorRepository.findByEmail(professorRequest2.getEmail()).orElseThrow();
         Professor professor3 = professorRepository.findByEmail(professorRequest3.getEmail()).orElseThrow();
+        Professor professor4 = professorRepository.findByEmail(professorRequest4.getEmail()).orElseThrow();
+        Professor professor5 = professorRepository.findByEmail(professorRequest5.getEmail()).orElseThrow();
+        Professor professor6 = professorRepository.findByEmail(professorRequest6.getEmail()).orElseThrow();
 
 
 		Subject subject1 = Subject.builder()
-			.name("Subject - 1")
+			.name("Calculo I")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject2 = Subject.builder()
-			.name("Subject - 2")
+			.name("Banco de dados I")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject3 = Subject.builder()
-			.name("Subject - 3")
+			.name("Programacao a objetos")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject4 = Subject.builder()
-			.name("Subject - 4")
+			.name("Algoritimos e Estruturas de Dados")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject5 = Subject.builder()
-			.name("Subject - 5")
+			.name("Empreendedorismo")
 			.students((Set) new HashSet<>())
 			.build();
 		Subject subject6 = Subject.builder()
-			.name("Subject - 6")
+			.name("Analise de Sistemas")
 			.students((Set) new HashSet<>())
 			.build();
+		Subject subject7 = Subject.builder()
+			.name("Projeto Integrador I")
+			.students((Set) new HashSet<>())
+			.build();
+		Subject subject8 = Subject.builder()
+			.name("Analise de Sistemas")
+			.students((Set) new HashSet<>())
+			.build();
+		Subject subject9 = Subject.builder()
+			.name("Arquitetura de computadores")
+			.students((Set) new HashSet<>())
+			.build();
+		Subject subject10 = Subject.builder()
+			.name("Ingles instrumental")
+			.students((Set) new HashSet<>())
+			.build();
+		Subject subject11 = Subject.builder()
+			.name("Etica")
+			.students((Set) new HashSet<>())
+			.build();
+		Subject subject12 = Subject.builder()
+			.name("Calculo II")
+			.students((Set) new HashSet<>())
+			.build();
+
 
 		professor1.addSubject(subject1);
 		professor1.addSubject(subject2);
@@ -194,16 +252,28 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		professor3.addSubject(subject5);
 		professor3.addSubject(subject6);
 
+		professor4.addSubject(subject7);
+		professor4.addSubject(subject8);
+
+		professor5.addSubject(subject9);
+		professor5.addSubject(subject10);
+
+		professor6.addSubject(subject11);
+		professor6.addSubject(subject12);
+
 
 
 		List<Subject> subjectList = new ArrayList<>();
 		List<Professor> professorList = new ArrayList<>();
 
 
-		subjectList.addAll(Arrays.asList(subject1, subject2, subject3, subject4, subject5, subject6));
+		subjectList.addAll(Arrays.asList(
+			subject1, subject2, subject3, subject4, subject5, subject6,
+			subject7,subject8, subject9, subject10, subject11, subject12));
+
 		subjectList.stream().forEach(sub -> subjectRepository.save(sub));
 
-		professorList.addAll(Arrays.asList(professor1, professor2, professor3));
+		professorList.addAll(Arrays.asList(professor1, professor2, professor3, professor4, professor5, professor6));
 		professorRepository.saveAll(professorList);
 		
 		enrollmentRepository.saveAll(Arrays.asList(enrollment1, enrollment2, enrollment3));
@@ -223,11 +293,23 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		subjectService.addSubjectToStudent(student3.getStudentId(), new SubjectRequest(subject1.getName(), subject1.getProfessor().getName()));
 		pdfService.generateEnrollmentStatement(student1, "src/test/Comprovante de Matricula - "+ student1.getStudentId() +".pdf");
 
-		AssignmentRequest assignmentRequest1 =  new AssignmentRequest("Assignment - 1", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20)); 
-		AssignmentRequest assignmentRequest2 =  new AssignmentRequest("Assignment - 2", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
-		AssignmentRequest assignmentRequest3 =  new AssignmentRequest("Assignment - 3", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
-		AssignmentRequest assignmentRequest4 =  new AssignmentRequest("Assignment - 4", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
-		AssignmentRequest assignmentRequest5 =  new AssignmentRequest("Assignment - 5", "assignment", LocalDateTime.of(2020, 10, 10, 10, 10), LocalDateTime.of(2020, 10, 10, 20, 20));
+		AssignmentRequest assignmentRequest1 =  new AssignmentRequest("Prova", "assignment", LocalDateTime.of(2023, 8, 2, 23, 59), LocalDateTime.of(2023, 8, 2, 23, 59)); 
+		AssignmentRequest assignmentRequest2 =  new AssignmentRequest("Teste", "assignment", LocalDateTime.of(2023, 8, 4, 23, 59), LocalDateTime.of(2023, 8, 4, 23, 59));
+		AssignmentRequest assignmentRequest3 =  new AssignmentRequest("Trabalho", "assignment", LocalDateTime.of(2023, 8, 6, 23, 59), LocalDateTime.of(2023, 8, 6, 23, 59));
+		AssignmentRequest assignmentRequest4 =  new AssignmentRequest("Trabalho", "assignment", LocalDateTime.of(2023, 8, 8, 23, 59), LocalDateTime.of(2023, 8, 8, 23, 59));
+		AssignmentRequest assignmentRequest5 =  new AssignmentRequest("Roteiro de seminario", "assignment", LocalDateTime.of(2023, 8, 10, 23, 59), LocalDateTime.of(2023, 8, 10, 23, 59));
+
+		AssignmentRequest assignmentRequest6 =  new AssignmentRequest("Roteiro de seminario", "assignment", LocalDateTime.of(2023, 8, 12, 23, 59), LocalDateTime.of(2023, 8, 12, 23, 59));
+		AssignmentRequest assignmentRequest7 =  new AssignmentRequest("Roteiro de seminario", "assignment", LocalDateTime.of(2023, 8, 14, 23, 59), LocalDateTime.of(2023, 8, 14, 23, 59));
+		AssignmentRequest assignmentRequest8 =  new AssignmentRequest("Relatorio", "assignment", LocalDateTime.of(2023, 8, 15, 23, 59), LocalDateTime.of(2023, 8, 15, 23, 59));
+		AssignmentRequest assignmentRequest9 =  new AssignmentRequest("Relatorio", "assignment", LocalDateTime.of(2023, 8, 16, 23, 59), LocalDateTime.of(2023, 8, 16, 23, 59));
+		AssignmentRequest assignmentRequest10 =  new AssignmentRequest("Trabalho", "assignment", LocalDateTime.of(2023, 8, 17, 23, 59), LocalDateTime.of(2023, 8, 17, 23, 59));
+		AssignmentRequest assignmentRequest11 =  new AssignmentRequest("Assignment", "assignment", LocalDateTime.of(2023, 8, 18, 23, 59), LocalDateTime.of(2023, 8, 18, 23, 59));
+		AssignmentRequest assignmentRequest12 =   new AssignmentRequest("Prova", "assignment", LocalDateTime.of(2023, 8, 20, 23, 59), LocalDateTime.of(2023, 8, 20, 23, 59));
+		AssignmentRequest assignmentRequest13 =  new AssignmentRequest("Prova", "assignment", LocalDateTime.of(2023, 8, 22, 23, 59), LocalDateTime.of(2023, 8, 22, 23, 59));
+		AssignmentRequest assignmentRequest14 =  new AssignmentRequest("Assignment", "assignment", LocalDateTime.of(2023, 8, 23, 23, 59), LocalDateTime.of(2023, 8, 23, 23, 59));
+		AssignmentRequest assignmentRequest15 =   new AssignmentRequest("Prova", "assignment", LocalDateTime.of(2023, 8, 24, 23, 59), LocalDateTime.of(2023, 8, 24, 23, 59));
+		AssignmentRequest assignmentRequest16 =  new AssignmentRequest("Prova", "assignment", LocalDateTime.of(2023, 8, 25, 23, 59), LocalDateTime.of(2023, 8, 25, 23, 59));
 
 
 		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest1);
@@ -241,8 +323,22 @@ public class ApplicationStartRunner implements CommandLineRunner {
 
 		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest2);
 		assignmentService.addAssignmentToSubjectById(Long.valueOf(2), assignmentRequest3);
-		assignmentService.addAssignmentToSubjectById(Long.valueOf(4), assignmentRequest4);		
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(3), assignmentRequest3);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(3), assignmentRequest4);		
 		assignmentService.addAssignmentToSubjectById(Long.valueOf(4), assignmentRequest5);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(5), assignmentRequest6);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(6), assignmentRequest7);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(6), assignmentRequest8);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(7), assignmentRequest9);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(8), assignmentRequest10);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(9), assignmentRequest11);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(9), assignmentRequest12);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(9), assignmentRequest13);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(10), assignmentRequest14);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(11), assignmentRequest15);
+		assignmentService.addAssignmentToSubjectById(Long.valueOf(12), assignmentRequest16);
+
+
 		List<AssignmentResponse> listAssignment = assignmentRepository.findAllAssingmentsByStudentId(Long.valueOf(2))
 			.stream()
 			.map(AssignmentResponse::new)

@@ -19,22 +19,23 @@ public class StudentController {
     private final StudentRepository repository;
     private final PdfGeneratorService pdfGeneratorService;
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public List<StudentResponseDTO> getAll(){
-
         List<StudentResponseDTO> studentList = repository.findAll().stream().map(StudentResponseDTO::new).toList();
         return studentList;
+    }
+
+    @PostMapping("/find-by-email")
+    public Long getStudentByEmail(@RequestBody String email) {
+        return repository.findByEmail(email).get().getStudentId();
     }
 
     @GetMapping("/enrollment/{id}")
     public ResponseEntity<String> printStudentById(@PathVariable Long id) {
         Student student = repository.findById(id).orElse(null);
-
         if (student == null) {
             return ResponseEntity.notFound().build();
         }
-
         String filePath = "src/test/Comprovante de Matricula - "+ student.getStudentId() +".pdf";
         pdfGeneratorService.generateEnrollmentStatement(student, filePath);
         return ResponseEntity.ok("PDF gerado com sucesso!");
