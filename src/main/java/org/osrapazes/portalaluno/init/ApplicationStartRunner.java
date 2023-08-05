@@ -118,9 +118,17 @@ public class ApplicationStartRunner implements CommandLineRunner {
 			.build();
 
 		Enrollment enrollment4 = Enrollment.builder()
-				.enrollmentCode("222")
-				.enrollmentDate(LocalDate.of(2020, 2, 2))
-				.build();
+			.enrollmentCode("222")
+			.enrollmentDate(LocalDate.of(2020, 2, 2))
+			.build();
+		Enrollment enrollment5 = Enrollment.builder()
+			.enrollmentCode("333")
+			.enrollmentDate(LocalDate.of(2020, 2, 2))
+			.build();
+		Enrollment enrollment6 = Enrollment.builder()
+			.enrollmentCode("444")
+			.enrollmentDate(LocalDate.of(2020, 2, 2))
+			.build();
 
         RegisterRequestProfessor professorRequest1 = RegisterRequestProfessor.builder()
                 .name("Mauricio")
@@ -276,7 +284,7 @@ public class ApplicationStartRunner implements CommandLineRunner {
 		professorList.addAll(Arrays.asList(professor1, professor2, professor3, professor4, professor5, professor6));
 		professorRepository.saveAll(professorList);
 		
-		enrollmentRepository.saveAll(Arrays.asList(enrollment1, enrollment2, enrollment3));
+		enrollmentRepository.saveAll(Arrays.asList(enrollment1, enrollment2, enrollment3, enrollment4, enrollment5, enrollment6));
 
 		authenticationService.register(studentRequest1);
 		authenticationService.register(studentRequest2);
