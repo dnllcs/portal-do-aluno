@@ -34,3 +34,6 @@ build/
 
 
 secrets.properties
+
+*.orig
+*.pdf

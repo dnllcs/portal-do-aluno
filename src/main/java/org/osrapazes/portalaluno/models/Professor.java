@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 import java.util.HashSet;
@@ -27,23 +27,23 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "aluno")
+@Table(name = "professor")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor 
-@EqualsAndHashCode(of = "studentId", exclude = { "subjects", "user", "enrollment"})
-@ToString(exclude = { "subjects", "user", "enrollment"})
+@EqualsAndHashCode(exclude = {"subjects", "user"})
+@ToString(exclude = { "subjects", "user"})
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "studentId")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "subjects", "enrollment", "user"})
-public class Student{
+  property = "professorId")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "subjects", "user"})
+public class Professor{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "aluno_id")
-	private Long studentId;
+	@Column(name = "professor_id")
+	private Long professorId;
 
 	@Column(name = "nome")
 	private String name;
@@ -55,34 +55,21 @@ public class Student{
 	private String cpf;
 	private String rg;
 	private String email;
-	private boolean status;	
+	private boolean status;
 	private LocalDate birthDate;
-	
-	@OneToOne
-	@JoinColumn(name = "matricula_id")
-	@JsonIgnoreProperties("student")
-	private Enrollment enrollment;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "aluno_disciplina",
-		joinColumns = @JoinColumn(name = "aluno_id"),
-        inverseJoinColumns = @JoinColumn(name = "disciplina_id"))
-	@JsonIgnoreProperties("students")
+	@OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("professor")
 	private Set<Subject> subjects = new HashSet<>();
-
-	public void addEnrollment(Enrollment enrollment) {
-		this.enrollment = enrollment;
-		enrollment.addStudent(this);
-	} 
 
 	public void addUser(User user) {
 		this.user = user;
-		user.setStudent(this);
+		user.setProfessor(this);
 	}
 
 	public void addSubject(Subject subject) {
 		this.subjects.add(subject);
-		subject.getStudents().add(this);
+		subject.setProfessor(this);
 	}
   
 	public void removeSubject(Subject subject) {
@@ -97,11 +84,5 @@ public class Student{
 		this.subjects = subjects;
 	}
 
-	public Student(StudentRequestDTO data){
-		this.name = data.name();
-		this.cpf = data.cpf();
-		this.rg = data.rg();
-		this.email = data.email();
-	}
 }
 

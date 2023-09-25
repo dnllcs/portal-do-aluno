@@ -1,5 +1,7 @@
 package org.osrapazes.portalaluno.configuration;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -8,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 //Filtro das requests http
@@ -23,8 +28,10 @@ public class SecurityConfiguration {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.
 					csrf(csrf -> csrf.disable())
+					.cors()
+					.and()
 					.authorizeHttpRequests()
-					.requestMatchers("api/v1/auth/**")
+					.requestMatchers("v1/auth/**")
 					.permitAll()
 					.anyRequest()
 					.authenticated()
@@ -37,5 +44,15 @@ public class SecurityConfiguration {
 					.build();
 
 
+	}
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+	    CorsConfiguration configuration = new CorsConfiguration();
+	    configuration.setAllowedOrigins(Arrays.asList("*"));
+	    configuration.setAllowedMethods(Arrays.asList("*"));
+	    configuration.setAllowedHeaders(Arrays.asList("*"));
+	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	    source.registerCorsConfiguration("/**", configuration);
+	    return source;
 	}
 }
