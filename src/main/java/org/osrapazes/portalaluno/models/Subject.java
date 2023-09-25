@@ -32,8 +32,8 @@ import lombok.Builder;
 @Entity
 @Builder
 @Table(name = "disciplina")
-@EqualsAndHashCode(exclude = { "subjects", "assignments"})
-@ToString(exclude = { "subjects", "assignments"})
+@EqualsAndHashCode(exclude = { "subjects", "assignments", "professor", "students"})
+@ToString(exclude = { "subjects", "assignments", "professor", "students"})
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class, 
   property = "subjectId")
@@ -73,6 +73,10 @@ public class Subject {
 	public Set<Student> getStudents() {
 		return this.students;
 	}
+
+	// public Professor getProfessor() {
+	// 	return this.professor;
+	// }
 
 	public void addAssignment(Assignment assignment) {
 		this.assignments.add(assignment);

@@ -29,8 +29,8 @@ public class SubjectController {
 	}
 
 	@GetMapping("/student/{id}")
-	public ResponseEntity<?> getSubjects(@PathVariable("id") int id) {
-		return subjectService.getSubjects(Long.valueOf(id));
+	public ResponseEntity<?> getSubjectsById(@PathVariable("id") int id) {
+		return subjectService.getSubjectsById(Long.valueOf(id));
 	}
 
 	@PostMapping("/student/{id}/add")

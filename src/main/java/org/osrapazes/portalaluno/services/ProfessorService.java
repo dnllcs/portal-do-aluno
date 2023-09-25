@@ -15,14 +15,13 @@ import lombok.RequiredArgsConstructor;
 public class ProfessorService {
 
 	private final ProfessorRepository professorRepository;
-	private final StudentRepository studentRepository;
 
 	public ResponseEntity<?> getAllProfessors() {
 		return ResponseEntity.accepted().body(professorRepository.findAll());
 	}
 
 	public ResponseEntity<?> getAllProfessorsByStudent(Long id) {
-		Student std = studentRepository.getById(id);
-		return ResponseEntity.accepted().body(std.getSubjectsAsList().stream().map(sub -> new ProfessorResponse(sub.getProfessor())).distinct().toList());
+		return ResponseEntity.accepted().body(professorRepository.findByStudentId(id));
 	}
+
 }

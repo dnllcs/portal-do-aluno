@@ -23,15 +23,13 @@ public class AssignmentService {
 
 	private final AssignmentRepository assignmentRepository;
 	private final SubjectRepository subjectRepository;
-	private final StudentRepository studentRepository;
 
 	public ResponseEntity<List<AssignmentResponse>> getAllAssignments() {
 		return ResponseEntity.accepted().body(assignmentRepository.findAll().stream().map(AssignmentResponse::new).toList());
 	}
 
 	public ResponseEntity<List<AssignmentResponse>> getAssignmentsBySubjectId(Long id) {
-		Subject subject = subjectRepository.getById(id);
-		return ResponseEntity.accepted().body(subject.getAssignments().stream().map(AssignmentResponse::new).toList());
+		return ResponseEntity.accepted().body(assignmentRepository.findAllAssingmentsBySubjectId(id).stream().map(AssignmentResponse::new).toList());
 	}
 
 	public ResponseEntity<?> addAssignmentToSubjectById(Long subjectId, AssignmentRequest request) {
@@ -59,25 +57,7 @@ public class AssignmentService {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("subject id:" + subjectId + " not found");
 		}
 		else if(assignmentOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("assignment id :" + assignmentId + " not found");			
-		}
-
-		Subject subject = subjectOptional.get();
-		Assignment assignment = assignmentOptional.get();
-		subject.removeAssignment(assignment);
-		assignmentRepository.delete(assignment);
-		subjectRepository.save(subject);
-		return ResponseEntity.accepted().body(subject.getAssignments().stream().map(AssignmentResponse::new).toList());
-	}
-
-	public ResponseEntity<?> removeAssignmentInSubjectByTitle(Long subjectId, String title) {
-		Optional<Subject> subjectOptional = subjectRepository.findByIdEagerly(Long.valueOf(subjectId));
-		Optional<Assignment> assignmentOptional = assignmentRepository.findByTitle(title);
-		if(subjectOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("subject id:" + subjectId + " not found");
-		}
-		else if(assignmentOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("assignment title :" + title + " not found");			
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("assignment id :" + assignmentId + " not found");
 		}
 
 		Subject subject = subjectOptional.get();
@@ -89,13 +69,6 @@ public class AssignmentService {
 	}
 
 	public List<AssignmentResponse> getStudentAssignments(Long studentId) {
-		return studentRepository
-			.findById(Long.valueOf(studentId))
-			.get()
-			.getSubjects()
-			.stream()
-			.flatMap(sub -> sub.getAssignments().stream())
-			.map(AssignmentResponse::new)
-			.toList();
+		return assignmentRepository.findAllAssingmentsByStudentId(studentId).stream().map(AssignmentResponse::new).toList();
 	}
 }

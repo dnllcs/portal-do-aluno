@@ -13,11 +13,12 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 	
-	@EntityGraph(attributePaths = {"subject", "subject.students"})
 	@Query("SELECT a FROM Assignment a, Subject su, Student st, IN (su.students) sust WHERE a.subject.subjectId = su.subjectId AND sust.studentId = st.studentId AND st.studentId = :id")
 	List<Assignment> findAllAssingmentsByStudentId(@Param("id") Long id);
 
-	@EntityGraph(attributePaths = {"subject"})
+	@Query("SELECT a FROM Assignment a WHERE a.subject.subjectId = :id")
+	List<Assignment> findAllAssingmentsBySubjectId(@Param("id") Long id);
+
 	@Query("FROM Assignment a WHERE a.title = :title")
 	Optional<Assignment> findByTitle(String title);
 }

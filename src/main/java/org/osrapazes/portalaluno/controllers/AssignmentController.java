@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-//Controle apenas utilizado para testes
+
 @RestController
 @RequestMapping("v1/assignments")
 @RequiredArgsConstructor
@@ -51,10 +51,5 @@ public class AssignmentController {
 	@PostMapping("/subject/{id}/remove-id")
 	public ResponseEntity<?> removeAssignmentInSubjectById(@PathVariable("id") int subjectId, @RequestBody int assignmentId) {
 		return assignmentService.removeAssignmentInSubjectById(Long.valueOf(subjectId), Long.valueOf(assignmentId));				
-	}
-
-	@PostMapping("/subject/{id}/remove-title")
-	public ResponseEntity<?> removeAssignmentInSubjectByTitle(@PathVariable("id") int id, @RequestBody String title) {
-		return assignmentService.removeAssignmentInSubjectByTitle(Long.valueOf(id), title);				
 	}
 }

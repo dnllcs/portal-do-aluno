@@ -76,10 +76,6 @@ public class Professor{
 		this.subjects.remove(subject);
 	}
 
-	public List<Subject> getSubjectsAsList() {
-		return List.copyOf(this.subjects);
-	}
-
 	public Set<Subject> getSubjects() {
 		return this.subjects;
 	}

@@ -55,7 +55,7 @@ public class Student{
 	private String cpf;
 	private String rg;
 	private String email;
-	private boolean status;
+	private boolean status;	
 	private LocalDate birthDate;
 	
 	@OneToOne
@@ -87,10 +87,6 @@ public class Student{
   
 	public void removeSubject(Subject subject) {
 		this.subjects.remove(subject);
-	}
-
-	public List<Subject> getSubjectsAsList() {
-		return List.copyOf(this.subjects);
 	}
 
 	public Set<Subject> getSubjects() {

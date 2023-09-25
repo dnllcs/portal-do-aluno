@@ -16,23 +16,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentController {
 
-    private final StudentRepository repository;
+    private final StudentRepository studentRepository;
     private final PdfGeneratorService pdfGeneratorService;
 
     @GetMapping
     public List<StudentResponseDTO> getAll(){
-        List<StudentResponseDTO> studentList = repository.findAll().stream().map(StudentResponseDTO::new).toList();
+        List<StudentResponseDTO> studentList = studentRepository.findAll().stream().map(StudentResponseDTO::new).toList();
         return studentList;
     }
 
     @PostMapping("/find-by-email")
     public Long getStudentByEmail(@RequestBody String email) {
-        return repository.findByEmail(email).get().getStudentId();
+        return studentRepository.findByEmail(email).get().getStudentId();
     }
 
     @GetMapping("/enrollment/{id}")
     public ResponseEntity<String> printStudentById(@PathVariable Long id) {
-        Student student = repository.findById(id).orElse(null);
+        Student student = studentRepository.findById(id).orElse(null);
         if (student == null) {
             return ResponseEntity.notFound().build();
         }
